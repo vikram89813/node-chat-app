@@ -10,7 +10,7 @@ var app = express();
 app.use(express.static(publicPath));
 var server = http.createServer(app);
 var io = socketIO(server);
-
+ 
 io.on('connection',(socket)=>{
     console.log('new user connected');
 
@@ -29,14 +29,21 @@ io.on('connection',(socket)=>{
     // });
 
     socket.on('createMessage',(message)=>{
-        console.log('create message : ',message);
+        //console.log('create message : ',message);
+        //emit to all
+        io.emit('newMessage',{
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        });
     });
 
-    socket.emit('newMessage',{
-        from: 'john',
-        text: 'see you then',
-        createAt: 123123
-    });
+    //emit to a particulat socket.
+    // socket.emit('newMessage',{
+    //     from: 'john',
+    //     text: 'see you then',
+    //     createAt: 123123
+    // });
 });
 
 server.listen(port,()=>{
