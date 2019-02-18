@@ -3,6 +3,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
 
+const {generateMessage} = require('./utils/message');
 const publicPath = path.join(__dirname,'../public');
 const port = process.env.PORT || 3000;
 
@@ -28,26 +29,13 @@ io.on('connection',(socket)=>{
     //     console.log('createEmail: ',newEmail);
     // });
 
-    socket.emit('newMessage',{
-        from: 'Admin',
-        text: 'Welcome to the chat app',
-        createdAt: new Date().getTime()
-    });
-
-    socket.broadcast.emit('newMessage',{
-        from: 'Admin',
-        text: 'New user joined',
-        createdAt: new Date().getTime()
-    });
+    socket.emit('newMessage',generateMessage('Admin','Welcome to the chat app'));
+    socket.broadcast.emit('newMessage',generateMessage('Admin','New user Joined'));
 
     socket.on('createMessage',(message)=>{
         //console.log('create message : ',message);
         //emit to all
-        io.emit('newMessage',{
-            from: message.from,
-            text: message.text,
-            createdAt: new Date().getTime()
-        });
+        io.emit('newMessage',generateMessage(message.from,message.text));
 
         //this socket will not recive the return message all others will.
         // socket.broadcast.emit('newMessage',{
@@ -58,7 +46,7 @@ io.on('connection',(socket)=>{
     });
 
     //emit to a particulat socket.
-    // socket.emit('newMessage',{
+    // socket.emit('newMessage',{ 
     //     from: 'john',
     //     text: 'see you then',
     //     createAt: 123123
