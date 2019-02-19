@@ -4,6 +4,7 @@ const socketIO = require('socket.io');
 const http = require('http');
 
 const {generateMessage} = require('./utils/message');
+const {generateLocationMessage} = require('./utils/message');
 const publicPath = path.join(__dirname,'../public');
 const port = process.env.PORT || 3000;
 
@@ -52,6 +53,11 @@ io.on('connection',(socket)=>{
     //     text: 'see you then',
     //     createAt: 123123
     // });
+
+    socket.on('createLocationMessage',(coords)=>{
+        // io.emit('newMessage',generateMessage('Admin',`${coords.latitude}, ${coords.longitude}`));
+        io.emit('newLocationMessage',generateLocationMessage('Admin',coords.latitude,coords.longitude));
+    });
 });
 
 server.listen(port,()=>{
