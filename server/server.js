@@ -37,7 +37,7 @@ io.on('connection',(socket)=>{
         //console.log('create message : ',message);
         //emit to all
         io.emit('newMessage',generateMessage(message.from,message.text));
-        callback('This is from the server');
+        callback();
 
         //this socket will not recive the return message all others will.
         // socket.broadcast.emit('newMessage',{
